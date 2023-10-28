@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/tasks', [TaskController::class, 'kanban'])->name('tasks.index');
     Route::resource('tasks', TaskController::class)->except(['index', 'show']);
+    Route::get('report', [ReportController::class, 'index'])->name('report.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

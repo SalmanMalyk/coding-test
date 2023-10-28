@@ -22,6 +22,8 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // check if id value is not null than it should be string and max length should be 255 and it should be unique in tasks table
+            'id' => ['nullable', 'integer', 'exists:tasks,id'],
             'name' => ['required', 'string', 'max:255'],
             'phase_id' => ['required', 'integer', 'exists:phases,id'],
             'user_id' => ['required', 'integer', 'exists:users,id'],

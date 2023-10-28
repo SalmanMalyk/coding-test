@@ -19,7 +19,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return \App\Models\Phase::with('tasks.user')->get();
+        return \App\Models\Phase::with('tasks.user')->withCount('tasks')->get();
     }
 
     /**
@@ -27,7 +27,10 @@ class TaskController extends Controller
      */
     public function users()
     {
-        return \App\Models\User::all();
+        return \App\Models\User::query()
+            ->withCount('tasks')
+            ->orderBy('tasks_count', 'desc')
+            ->get();
     }
 
     /**
@@ -41,10 +44,12 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request): \Illuminate\Http\Response
     {
-        // Create a new task from the $request
-        $task = Task::create($request->validated());
+        // check if id is not null than update record otherwise create new record
+        Task::updateOrCreate(['id' => $request->id], $request->validated());
+
+        return response()->noContent();
     }
 
     /**

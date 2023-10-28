@@ -4,17 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'phase_id',
         'user_id',
+        'completed_at'
     ];
 
-    use HasFactory;
+    protected $casts = [
+        'completed_at' => 'datetime',
+    ];
+
+    protected static function booted()
+    {
+        static::updated(function ($task) {
+            if (is_null($task->completed_at) && $task->phase_id == 6) {
+                $task->completed_at = now();
+                $task->save();
+            }
+        });
+    }
 
     function user()
     {

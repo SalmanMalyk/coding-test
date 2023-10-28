@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePhaseRequest;
 use App\Http\Requests\UpdatePhaseRequest;
 use App\Models\Phase;
+use Illuminate\Support\Facades\DB;
 
 class PhaseController extends Controller
 {
@@ -61,6 +62,9 @@ class PhaseController extends Controller
      */
     public function destroy(Phase $phase)
     {
-        //
+        DB::transaction(function () use ($phase) {
+            $phase->tasks()->delete();
+            $phase->delete();
+        });
     }
 }
