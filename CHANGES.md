@@ -25,3 +25,13 @@
 
 -   Validation using vee-validate
 -   Drag & Drop functionality using vueuse library
+
+## 1.0.1
+
+### Features
+
+-   Users can now mark/unmark a phase as completion from phase dropdown menu.
+
+### Bug Fix
+
+-   Removed separate completion phase

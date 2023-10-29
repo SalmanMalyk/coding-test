@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Phase;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePhaseRequest;
 use App\Http\Requests\UpdatePhaseRequest;
-use App\Models\Phase;
-use Illuminate\Support\Facades\DB;
 
 class PhaseController extends Controller
 {
@@ -52,9 +53,14 @@ class PhaseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePhaseRequest $request, Phase $phase)
+    public function update(UpdatePhaseRequest $request, Phase $phase): Response
     {
-        //
+        return DB::transaction(function () use ($phase) {
+            $phase->is_completion_phase = !$phase->is_completion_phase;
+            $phase->save();
+
+            return response()->noContent();
+        });
     }
 
     /**

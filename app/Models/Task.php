@@ -24,7 +24,7 @@ class Task extends Model
     protected static function booted()
     {
         static::updated(function ($task) {
-            if (is_null($task->completed_at) && $task->phase_id == 6) {
+            if (is_null($task->completed_at) && $task->phase?->is_completion_phase == 1) {
                 $task->completed_at = now();
                 $task->save();
             }

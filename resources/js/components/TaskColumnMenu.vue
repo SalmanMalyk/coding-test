@@ -47,6 +47,34 @@
                                         : 'text-white',
                                     'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                                 ]"
+                                @click="toggleCompletionPhase"
+                            >
+                                <XMarkIcon
+                                    class="mr-3 h-5 w-5 text-gray-100 group-hover:text-gray-500"
+                                    aria-hidden="true"
+                                    v-if="props.phase.is_completion_phase"
+                                />
+                                <CheckIcon
+                                    class="mr-3 h-5 w-5 text-gray-100 group-hover:text-gray-500"
+                                    aria-hidden="true"
+                                    v-else
+                                />
+                                {{
+                                    props.phase.is_completion_phase
+                                        ? "Un-mark"
+                                        : "Mark"
+                                }}
+                                as Completion
+                            </button>
+                        </MenuItem>
+                        <MenuItem v-slot="{ active }">
+                            <button
+                                :class="[
+                                    active
+                                        ? 'bg-white text-black'
+                                        : 'text-white',
+                                    'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                                ]"
                                 @click="deleteColumn"
                             >
                                 <TrashIcon
@@ -66,9 +94,11 @@
 <script setup>
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import {
+    CheckIcon,
     EllipsisVerticalIcon,
     PlusIcon,
     TrashIcon,
+    XMarkIcon,
 } from "@heroicons/vue/20/solid";
 
 import { useKanbanStore } from "../stores/kanban";
@@ -81,6 +111,15 @@ const props = defineProps({
         required: true,
     },
 });
+
+const toggleCompletionPhase = async () => {
+    try {
+        await axios.put(`/api/phases/${props.phase.id}`);
+        kanban.refreshTasks();
+    } catch (error) {
+        console.error("There was an error fetching the tasks!", error);
+    }
+};
 
 const createTask = function () {
     kanban.creatingTask = true;
